@@ -1,0 +1,66 @@
+CREATE DATABASE escola;
+//criar base de dados
+
+USE escola;
+//selecionar base de dados
+
+CREATE TABLE aluno(
+    alunoRa int,
+    alunoNome varchar(45),
+    alunoCpf char(11),
+    alunoRg char(9),
+PRIMARY KEY (alunoRa));
+//criar tabela
+
+DESCRIBE aluno;
+//mostra a estrutura da tabela
+
+SHOW TABLES;
+//mostrar tabelas
+
+SHOW DATABASES;
+//Mostra as bases de dados
+
+INSERT INTO aluno (alunoRa, alunoNome, alunoCpf, alunoRg) 
+VALUES(1, 'Pedro', '012345678901', '123456789');
+//inserir valores na tabela
+
+SELECT coluna da tabela FROM tabela WHERE coluna da tabela = valor de busca;
+//selecionar um ou varios registros de uma tabela. valores possiveis: =, <, >, !(diferente),<=,>=,!=
+//(adicionar or, seleciona + de um nome, se n tiver um deles, vai mostrar só o que existe) ex: select * from pessoa where pessoaNome = 'lucas' or pessoaNome = 'pedro';
+//(adicionar and, selectiona os 2 obrigatoriamente) ex: select * from pessoa where pessoaNome = 'lucas' and pessoaNome = 'pedro';
+
+select * from pessoa order by pessoaNome;
+//exibe a coluna selecionada e ordena os registros em ordem alfabetica.
+   =   =   =    =      =    =      =    desc;
+//DESCENDENTE
+
+select pessoaId, pessoaNome from pessoa where pessoaId BETWEEN 2 and 6;
+//mostrar o registro entre os valores selecionados
+
+alter table nomeDaTabela add nomeDaColuna varchar(11);
+//adiciona nova coluna na tabela
+
+update nomeTabela set nomeColuna=valor where chavePrimaria=valor; 
+ex: update pessoa set pessoaTelefone=970789360 where pessoaId=2; 
+//atualiza o dado em uma tabela em uma coluna específica
+
+CREATE TABLE pessoa(
+    pessoaId int not null AUTO_INCREMENT,
+    pessoaNome varchar(45),
+    pessoaNascimento date,
+    pessoaSexo enum('m','f'),
+    pessoaPeso decimal(5,2),
+    pessoaAltura decimal(3,2),
+    pessoaNaci varchar(20) DEFAULT 'Brasil',
+PRIMARY KEY(pessoaId));
+
+//entre parenteses em decimal, (3,2) significa 3 casas o total e 2 após a virgula
+
+
+INSERT INTO pessoa (pessoaNome, pessoaNascimento, pessoaSexo, pessoaPeso, pessoaAltura, pessoaNaci) 
+VALUES('Pedro', '2002-07-18', 'm', 10.60, 0.58, 'Africa');              
+
+
+DELETE from tabela where coluna = valor;
+//deleta um registro
