@@ -1,0 +1,191 @@
+Skip to content
+Sign up
+PedroAlmeida2
+/
+MySql
+Public
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security
+More
+MySql/aula
+@PedroAlmeida2
+PedroAlmeida2 Update aula
+ History
+ 1 contributor
+145 lines (118 sloc)  4.44 KB
+CREATE DATABASE escola;
+//criar base de dados
+
+USE escola;
+//selecionar base de dados
+
+CREATE TABLE aluno(
+    alunoRa int,
+    alunoNome varchar(45),
+    alunoCpf char(11),
+    alunoRg char(9),
+PRIMARY KEY (alunoRa));
+//criar tabela
+
+DESCRIBE aluno;
+//descrever tabela
+
+SHOW TABLES;
+//mostrar tabelas
+
+INSERT INTO aluno (alunoRa, alunoNome, alunoCpf, alunoRg)VALUES (1, "Pedro", "012345678901", "123456789");
+//inserir valores na tabela
+
+SELECT coluna da tabela FROM tabela WHERE coluna da tabela = valor de busca;
+//selecionar um ou varios registros de uma tabela
+
+CREATE TABLE pessoa(
+    pessoaId int not null AUTO_INCREMENT,
+    pessoaNome varchar(45),
+    pessoaNascimento date,
+    pessoaSexo enum('m','f'),
+    pessoaPeso decimal(5,2),
+    pessoaAltura decimal(3,2),
+    pessoaNaci varchar(20) DEFAULT 'Brasil',
+PRIMARY KEY(pessoaId));
+
+
+INSERT INTO pessoa (pessoaNome, pessoaNascimento, pessoaSexo, pessoaPeso, pessoaAltura, pessoaNaci) VALUES
+				   ('Pedro', '2002-07-18', 'm', 10.60, 0.58, 'Africa');
+				   
+SELECT * FROM pessoa WHERE pessoaNome = 'Pedro' AND pessoaSexo = 'm' AND pessoaAltura > '0.50' AND pessoaAltura < 0.60 ORDER by pessoaNome;		
+//selecionar um registro na tabela com as informações passadas   "ORDER BY" para ordenar;			   
+	   
+
+ALTER TABLE pessoa add pessoaTel varchar(11);
+//acrescentar coluna na tabela
+
+UPDATE pessoa SET pessoaTel = 11994470756 where pessoaId = 4;
+//atualizar informação da coluna
+
+DELETE FROM tabela WHERE condição;
+//NUNCA ESQUECER de utilizar o "WHERE" caso contrário a tabela inteira será deletada.
+
+======================================================================================================================
+                   01/06/2023
+
+CREATE DATABASE loja_virtual
+DEFAULT CHARACTER SET utf8
+DEFAULT COLLATE utf8_general_ci;
+//Criar base de dados e comando para aceitar todos caracteres evitando erros.
+
+USE loja_virtual;
+//selecionar a base de dados.
+
+CREATE TABLE produto(
+    PRODUTO_COD INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    PRODUTO_NOME VARCHAR (45) NOT NULL,
+    PRODUTO_PRECO FLOAT(8,2)
+    )DEFAULT CHARSET = utf8
+//criar tabela
+
+CREATE TABLE produto_detalhe(
+    DETALHE_COD INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    DETALHE_DESCRICAO TEXT NOT NULL,
+    FK_PRODUTO_COD INT NOT NULL,
+    FOREIGN KEY (FK_PRODUTO_COD) REFERENCES produto (PRODUTO_COD)
+)DEFAULT CHARSET = utf8
+//Criar tabela, e usar chave estrangeira da PK "PRODUTOS_COD"
+
+INSERT INTO PRODUTO (PRODUTO_PRECO, PRODUTO_NOME)
+VALUES
+  (1000.00, 'Smartphone'),
+  (2500.00, 'TV'),
+  (150.00, 'Fone de Ouvido'),
+  (800.00, 'Notebook'),
+  (300.00, 'Tablet'),
+  (2000.00, 'Câmera Digital'),
+  (120.00, 'Caixa de Som'),
+  (350.00, 'Mouse'),
+  (1800.00, 'Monitor'),
+  (500.00, 'Impressora');
+
+//inserir produto na tabela
+
+INSERT INTO PRODUTO_DETALHE (DETALHE_DESCRICAO, FK_PRODUTO_COD)
+VALUES
+  ('Um dispositivo móvel avançado que combina funções de telefone celular com recursos de computador, como acesso à internet, aplicativos e câmera integrada.','1'),
+  ('Um aparelho de televisão com tela plana que permite assistir a programas e filmes com qualidade de imagem e som.','2'),
+  ('Um dispositivo de áudio usado para ouvir música, assistir a vídeos ou realizar chamadas, proporcionando som de alta qualidade diretamente nos ouvidos.','3'),
+  ('Um computador portátil e compacto que permite realizar tarefas como navegação na internet, edição de documentos e reprodução de mídia em qualquer lugar.','4'),
+  ('Um dispositivo móvel em formato de prancheta, com tela sensível ao toque, usado para acessar a internet, executar aplicativos e consumir conteúdo multimídia.','5'),
+  ('Um dispositivo eletrônico usado para capturar imagens e gravar vídeos, permitindo armazenar e compartilhar momentos especiais com alta qualidade.','6'),
+  ('Um dispositivo de áudio externo que amplifica o som de dispositivos eletrônicos, como computadores, smartphones e tablets, proporcionando uma experiência sonora mais imersiva.','7'),
+  ('Um periférico de computador usado para controlar o movimento do cursor na tela, permitindo interações precisas e facilitando a navegação em programas e aplicativos.','8'),
+  ('Um dispositivo de exibição de vídeo que mostra as informações geradas pelo computador, permitindo visualizar imagens, vídeos e documentos com clareza e nitidez.','9'),
+  ('Um dispositivo que produz cópias físicas de documentos ou imagens digitais em papel, permitindo imprimir textos, fotos e gráficos com qualidade e rapidez.','10')
+//inserir descrição na tabela PRODUTO_DETALHE utilizar o FK_PRODUTO_COD PARA LINKAR
+// para indicar para qual produto será essa descrição
+
+CREATE TABLE cliente
+(
+    CLIENTE_COD INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    CLIENTE_NOME VARCHAR(45) NOT NULL,
+    CLIENTE_CPF VARCHAR(15),
+    CLIENTE_NASCIMENTO DATE,
+    CLIENTE_SEXO ENUM ('M', 'F')
+) DEFAULT CHARSET = utf8
+//Criar tabela clientes
+
+CREATE TABLE pedido
+(
+    PEDIDO_COD INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	DATA_HORA DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    FK_CLIENTE_COD INT NOT NULL,
+    FOREIGN KEY (FK_CLIENTE_COD) REFERENCES cliente(CLIENTE_COD),
+)
+//criar tabela pedido com chave estrangeira da tabela clientes
+
+CREATE TABLE CARRINHO
+(
+    FK_PRODUTO_COD INT NOT NULL,
+    FK_PEDIDO_COD INT NOT NULL,
+    FOREIGN KEY (FK_PRODUTO_COD) REFERENCES produto(PRODUTO_COD),
+    FOREIGN KEY (FK_PEDIDO_COD) REFERENCES pedido(PEDIDO_COD)
+)
+//criar tabela pedidos itens com 2 chaves estrangeira, sendo 1 da tabela "PRODUTO" e outra da "PEDIDO"
+
+INSERT INTO tb_cliente (CLIENTE_NOME, CLIENTE_CPF, CLIENTE_NASCIMENTO, CLIENTE_SEXO)
+VALUES
+('João Silva', '111.111.111-11', '2000-01-01', 'M'),
+('Maria Souza', '222.222.222-22', '1995-05-15', 'F'),
+('Pedro Santos', '333.333.333-33', '1988-10-30', 'M'),
+('Ana Oliveira', '444.444.444-44', '1992-07-22', 'F'),
+('Lucas Pereira', '555.555.555-55', '1985-03-10', 'M'),
+('Carla Rodrigues', '666.666.666-66', '1998-11-05', 'F'),
+('Márcio Almeida', '777.777.777-77', '1990-12-25', 'M'),
+('Juliana Costa', '888.888.888-88', '1987-09-18', 'F'),
+('Ricardo Mendes', '999.999.999-99', '1993-06-08', 'M'),
+('Fernanda Lima', '000.000.000-00', '1996-04-03', 'F')
+//criar 10 clientes na tabela tb_cliente
+
+INSERT INTO pedido(FK_CLIENTE_COD)
+VALUES
+('1')
+//
+
+INSERT INTO pedido_itens(ITENS_PRODUTO_COD, ITENS_PEDIDO_COD)
+VALUES
+	('1','1'),
+    ('2','2'),
+    ('3','3'),
+    ('4','4'),
+    ('5','5'),
+    ('6','6'),
+    ('7','7'),
+    ('8','8'),
+    ('9','9'),
+    ('10','10')
+
+//
+
+
