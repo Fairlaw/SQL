@@ -1,0 +1,226 @@
+create database Hotel
+default charset utf8
+default collate utf8_general_ci;
+
+use hotel;
+
+create table cliente
+(
+cliente_cod int not null primary key auto_increment,
+cliente_nome varchar (50)not null,
+cliente_cpf varchar(15)not null,
+cliente_rg varchar(15)not null,
+cliente_email varchar(70)not null,
+cliente_senha varchar(12)not null,
+recuperar_senha varchar(12),
+arquivar_em datetime not null
+);
+
+create table telefone_cli
+(
+telefone_cod int not null primary key auto_increment,
+telefone_tipo varchar(20)not null,
+telefone_cliente varchar(11)not null,
+fk_cliente_cod int not null,
+foreign key (fk_cliente_cod) references cliente (cliente_cod)
+);
+
+create table endereco_cliente
+(
+endereco_cod int not null primary key auto_increment,
+CEP varchar(8) not null,
+cidade varchar(60) not null,
+UF varchar(2) not null,
+logradouro varchar(60) not null,
+numero varchar(6) not null,
+fk_cliente_cod int not null,
+foreign key (fk_cliente_cod) references cliente (cliente_cod)
+);
+
+create table cartoes
+(
+cartoes_id int not null primary key auto_increment,
+cartoes_titular varchar (50) not null,
+cartoes_numero varchar(21) not null,
+cartoes_validade varchar(8) not null,
+cartoes_cvv varchar(3)not null,
+cartoes_tipo varchar(12)not null,
+fk_cliente_cod int not null,
+foreign key (fk_cliente_cod) references cliente (cliente_cod)
+);
+
+create table novidades
+(
+novidades_cod int not null primary key auto_increment,
+novidades_nome varchar(70) not null,
+novidades_email varchar(70) not null
+);
+
+create table cargo
+(
+cargo_cod int primary key auto_increment,
+cargo_nome varchar(45) not null,
+cargo_descricao text not null,
+cargo_arquivar_em varchar(5)
+);
+
+create table funcionario
+(
+funcionario_cod int not null primary key auto_increment,
+funcionario_nome varchar(50) not null,
+funcionario_nasci datetime not null,
+funcionario_cpf varchar(15) not null,
+funcionario_rg varchar(15) not null,
+funcionario_salario double(7,2) not null,
+funcionario_email varchar(60) not null,
+funcionario_senha varchar(12) not null,
+funcionario_periodo enum('manha','tarde','noite') not null,
+funcionario_admissao datetime not null,
+funcionario_demissao datetime,
+fk_cargo_cod int not null,
+foreign key (fk_cargo_cod) references cargo(cargo_cod)
+);
+
+create table endereco_funcionario
+(
+endereco_func_cod int not null primary key auto_increment,
+logradouro varchar(60) not null,
+numero int(6) not null,
+cep varchar(8) not null,
+bairro varchar(30) not null,
+cidade varchar(30) not null,
+uf varchar(2) not null,
+fk_funcionario_cod int not null,
+foreign key (fk_funcionario_cod) references funcionario(funcionario_cod)
+);
+
+create table telefone_funcionario
+(
+tipo varchar(20) not null,
+telefone varchar(21) not null,
+fk_funcionario_cod int not null,
+foreign key (fk_funcionario_cod) references funcionario(funcionario_cod)
+);
+
+create table historico
+(
+historico_cod int not null primary key auto_increment,
+logs text not null,
+data_hora datetime not null,
+fk_funcionario_cod int not null,
+foreign key (fk_funcionario_cod) references funcionario(funcionario_cod)
+);
+
+create table acoes
+(
+acoes_cod int not null primary key auto_increment,
+acoes_nome varchar(60) not null,
+fk_cargo_cod int not null,
+foreign key (fk_cargo_cod) references cargo(cargo_cod)
+);
+
+create table permissoes
+(
+permissoes_cod int not null primary key auto_increment,
+permissoes_consulta bit (1) not null,
+permissoes_delete bit(1) not null,
+permissoes_criar bit(1) not null,
+permissoes_alterar bit(1) not null,
+fk_acoes_cod int not null,
+foreign key (fk_acoes_cod) references acoes(acoes_cod)
+);
+
+create table tipos
+(
+tipos_cod int not null primary key auto_increment,
+tipos varchar (45)
+);
+
+create table formas_pagamento
+(
+formas_pag_cod int not null primary key auto_increment,
+tipo varchar(45)
+);
+
+create table tb_status
+(
+status_cod int not null primary key auto_increment,
+status_nome varchar(20) not null
+);
+
+create table quartos
+(
+quartos_cod int not null primary key auto_increment,
+quartos varchar(45) not null,
+descricao text not null,
+preco_diaria double(6,2) not null,
+qtd_pessoas int (2) not null,
+destaque bit(1) not null,
+arquivar_em datetime not null,
+fk_status_cod int not null,
+fk_tipos_cod int not null,
+foreign key (fk_status_cod) references tb_status(status_cod),
+foreign key (fk_tipos_cod) references tipos(tipos_cod)
+);
+
+create table imagens
+(
+imagens_cod int not null primary key auto_increment,
+imagens_url1 varchar(100) not null,
+imagens_url2 varchar(100) not null,
+fk_quartos_cod int not null,
+foreign key (fk_quartos_cod) references quartos(quartos_cod)
+);
+
+create table pedidos_reservas
+(
+pedidos_reservas_cod int not null primary key auto_increment,
+data_reserva datetime not null,
+data_entrada datetime,
+data_saida datetime,
+reserva_nome varchar(60) not null,
+reserva_cpf varchar(15) not null,
+reserva_email varchar(60) not null,
+reserva_acompanhante varchar(60) not null,
+fk_quartos_cod int not null,
+fk_status_cod int not null,
+foreign key (fk_quartos_cod) references quartos(quartos_cod),
+foreign key (fk_status_cod) references tb_status(status_cod)
+);
+
+create table reservas
+(
+reservas_cod int not null primary key auto_increment,
+preco_total float(6,2) not null,
+parcelas_total int(2) not null,
+data_entrada datetime,
+data_saida datetime,
+fk_pedidos_reservas_cod int not null,
+fk_funcionario_cod int not null,
+fk_status_cod int not null,
+foreign key (fk_pedidos_reservas_cod) references pedidos_reservas(pedidos_reservas_cod),
+foreign key (fk_funcionario_cod) references funcionario(funcionario_cod),
+foreign key (fk_status_cod) references tb_status(status_cod)
+);
+
+create table negativas
+(
+negativas_cod int not null primary key auto_increment,
+negativas_motivo text not null,
+fk_pedidos_reservas_cod int not null,
+fk_funcionario_cod int not null,
+foreign key (fk_pedidos_reservas_cod) references pedidos_reservas(pedidos_reservas_cod),
+foreign key (fk_funcionario_cod) references funcionario(funcionario_cod)
+);
+
+create table pagamentos
+(
+pagamentos_cod int not null primary key auto_increment,
+pagamento_entrada float(6,2)not null,
+pagamento_restante float(6,2) not null,
+taxa_juros float(6,2),
+fk_formas_pag_cod int not null,
+fk_reservas_cod int not null,
+foreign key (fk_formas_pag_cod) references formas_pagamento(formas_pag_cod),
+foreign key (fk_reservas_cod) references reservas(reservas_cod)
+);
