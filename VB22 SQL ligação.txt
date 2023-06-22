@@ -1,0 +1,58 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using MySql.Data;
+
+namespace Projetineo
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string config = "server = 127.0.0.1;user = root;password =;database = escola";
+                MySqlConnection conexao = new MySqlConnection(config);
+                conexao.Open();
+                MessageBox.Show("Conectado");
+            }
+            catch(Exception erro) 
+                {
+                MessageBox.Show("Erro no BD = "+erro.Message);
+                }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string config = "server = 127.0.0.1;user = root;password =;database = escola";
+            MySqlConnection conexao = new MySqlConnection(config);
+            conexao.Open();
+            string cmd = "INSERT INTO cliente(cliente_nome) Values(@nome_cli)";
+            MySqlCommand comando = new MySqlCommand(cmd, conexao);
+            comando.Parameters.Add(new MySqlParameter("@nome_cli", this.textBox1.Text));
+            comando.ExecuteNonQuery();
+        }
+    }
+}
