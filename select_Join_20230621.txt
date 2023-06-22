@@ -1,0 +1,47 @@
+CREATE DATABASE escola;
+
+use escola;
+
+CREATE TABLE cliente(
+cliente_cod int not null primary key auto_increment,
+cliente_nome varchar(50));
+
+CREATE TABLE pedido(
+pedido_cod int not null primary key auto_increment,
+pedido_valor float(8,2),
+fk_cliente_cod int,
+foreign key(fk_cliente_cod) references cliente(cliente_cod));
+
+insert into cliente (cliente_nome)
+values
+('lucas'),
+('pedro'),
+('marcelo'),
+('Cirilo'),
+('Vanda'),
+('Timmy'),
+('Cosmo'),
+('Digudigu'),
+('pichuí'),
+('Marcos');
+
+-- select * from cliente;
+
+insert into pedido(fk_cliente_cod,pedido_valor)
+Values
+(1,1000),(1,190),(1,400),(1,5000),(1,2000),(1,900),
+(2,951),(2,841),(2,1050),(2,200),(2,400),
+(3,159),(3,357),(3,852),(3,321),
+(4,915),(4,735),(4,396),
+(5,785),(5,325);
+
+-- select * from pedido
+
+-- select * from cliente join pedido on (cliente.cliente_cod = pedido.fk_cliente_cod)
+-- exibe apenas os registros que possuvem relação
+
+-- select * from cliente left join pedido on (cliente.cliente_cod = pedido.fk_cliente_cod)
+-- exibe os registros que também n possuvem dados
+
+-- select * from cliente right join pedido on (pedido.fk_cliente_cod = cliente.cliente_cod)
+-- select * from cliente join pedido on (pedido.fk_cliente_cod = cliente.cliente_cod)
